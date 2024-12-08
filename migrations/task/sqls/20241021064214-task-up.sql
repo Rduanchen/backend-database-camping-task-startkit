@@ -428,7 +428,7 @@ WHERE
 -- 6. 最大授課人數`max_participants` 設定為10
 -- 7. 授課連結設定`meeting_url`為 https://test-meeting.test.io
 INSERT INTO
-    COURSE (
+    "COURSE" (
         user_id,
         skill_id,
         name,
@@ -558,7 +558,7 @@ WHERE
         FROM
             "USER"
         WHERE
-            email = "wXlTq@hexschooltest.io"
+            email = 'wXlTq@hexschooltest.io'
     );
 
 -- 5-3. 新增：`王小明`再次預約 `李燕容`   的課程，請在`COURSE_BOOKING`新增一筆資料：
@@ -669,19 +669,39 @@ GROUP BY
 
 -- 5-8. [挑戰題] 查詢：請在一次查詢中，計算用戶王小明的剩餘可用堂數，顯示須包含以下欄位： user_id , remaining_credit
 -- 提示：
--- select ("CREDIT_PURCHASE".total_credit - "COURSE_BOOKING".used_credit) as remaining_credit, ...
--- from ( 用戶王小明的購買堂數 ) as "CREDIT_PURCHASE"
--- inner join ( 用戶王小明的已使用堂數) as "COURSE_BOOKING"
--- on "COURSE_BOOKING".user_id = "CREDIT_PURCHASE".user_id;
--- ████████  █████   █     ███  
---   █ █   ██    █  █     █     
---   █ █████ ███ ███      ████  
---   █ █   █    ██  █     █   █ 
---   █ █   █████ █   █     ███  
--- ===================== ====================
--- 6. 後台報表
--- 6-1 查詢：查詢專長為重訓的教練，並按經驗年數排序，由資深到資淺（需使用 inner join 與 order by 語法)
--- 顯示須包含以下欄位： 教練名稱 , 經驗年數, 專長名稱
+SELECT
+    "USER".id AS "用戶ID",
+    "USER".name AS "用戶名稱",
+    (
+        (
+            SELECT
+                SUM("CREDIT_PURCHASE".purchased_credits)
+            FROM
+                "CREDIT_PURCHASE"
+            WHERE
+                "CREDIT_PURCHASE".user_id = "USER".id
+        ) - (
+            SELECT
+                COUNT("COURSE_BOOKING".id)
+            FROM
+                "COURSE_BOOKING"
+            WHERE
+                "COURSE_BOOKING".user_id = "USER".id
+        )
+    ) AS remaining_credit
+FROM
+    "USER"
+WHERE
+    email = 'wXlTq@hexschooltest.io' -- on "COURSE_BOOKING".user_id = "CREDIT_PURCHASE".user_id;
+    -- ████████  █████   █     ███  
+    --   █ █   ██    █  █     █     
+    --   █ █████ ███ ███      ████  
+    --   █ █   █    ██  █     █   █ 
+    --   █ █   █████ █   █     ███  
+    -- ===================== ====================
+    -- 6. 後台報表
+    -- 6-1 查詢：查詢專長為重訓的教練，並按經驗年數排序，由資深到資淺（需使用 inner join 與 order by 語法)
+    -- 顯示須包含以下欄位： 教練名稱 , 經驗年數, 專長名稱
 SELECT
     "USER".name AS "教練名稱",
     "COACH".experience_years AS "經驗年數",
