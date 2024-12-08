@@ -749,3 +749,5 @@ WHERE
             created_at
     ) = 11
     AND status = '即將授課';
+
+-- 完成
