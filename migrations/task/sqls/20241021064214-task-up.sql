@@ -20,13 +20,13 @@ VALUES
     ('肌肉棒子', 'muscle@hexschooltest.io', 'USER'),
     ('好野人', 'richman@hexschooltest.io', 'USER'),
     ('Q太郎', 'starplatinum@hexschooltest.io', 'USER'),
-    ('透明人', 'opcatiy0@hexschooltest.io', 'USER');
+    ('透明人', 'opacity0@hexschooltest.io', 'USER');
 
 -- 1-2 修改：用 Email 找到 李燕容、肌肉棒子、Q太郎，如果他的 Role 為 USER 將他的 Role 改為 COACH
 UPDATE
     "USER"
 SET
-    USER.role = 'COACH'
+    role = 'COACH'
 WHERE
     email in (
         'lee2000@hexschooltest.io',
@@ -38,7 +38,7 @@ WHERE
 DELETE FROM
     "USER"
 WHERE
-    email = 'opcatiy0@hexschooltest.io';
+    email = 'opacity0@hexschooltest.io';
 
 -- 1-4 查詢：取得USER 資料表目前所有用戶數量（提示：使用count函式）
 SELECT
@@ -495,7 +495,7 @@ VALUES
             SELECT
                 id
             FROM
-                "COURSE_BOOKING"
+                "COURSE"
             WHERE
                 user_id = (
                     SELECT
@@ -547,7 +547,7 @@ VALUES
 -- 1. 取消預約時間`cancelled_at` 設為2024-11-24 17:00:00
 -- 2. 狀態`status` 設定為課程已取消
 UPDATE
-    "COUSE_BOOKING"
+    "COURSE_BOOKING"
 SET
     cancelled_at = '2024-11-24 17:00:00',
     status = '課程已取消'
@@ -571,7 +571,7 @@ INSERT INTO
         course_id,
         booking_at,
         status
-    ),
+    )
 VALUES
     (
         (
@@ -707,8 +707,7 @@ FROM
 GROUP BY
     "SKILL".name
 ORDER BY
-    "教練數量" DESC;
-
+    COUNT("COACH_LINK_SKILL".coach_id) DESC
 limit
     1;
 
